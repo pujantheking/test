@@ -24,18 +24,18 @@ services:
       interval: 10s
       timeout: 5s
   pg_admin:
-    image: dpage/pgadmin4:8
+    image: dpage/pgadmin4:8.5
     container_name: optech-pgadmin
     env_file:
       - .env
     environment:
-      - 'PGADMIN_DEFAULT_EMAIL: optech@pgadmin.com'
-      - 'PGADMIN_DEFAULT_PASSWORD: admin'
+      - 'PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}'
+      - 'PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}'
       - 'PGADMIN_CONFIG_SERVER_MODE: ''False'''
     volumes:
       - 'pgadmin:/var/lib/pgadmin'
     ports:
-      - '5050:80'
+      - '5051:80'
     networks:
       - default
 networks:
@@ -47,5 +47,3 @@ volumes:
     name: optech-postgresql
   pgadmin:
     name: optech-pg_admin
-  chromadb:
-    name: chatbot-chromadb

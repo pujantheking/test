@@ -9,3 +9,11 @@ class RoleType(StrEnum):
     ADMIN = "ADMIN"
     USER = "USER"
 
+class PaymentStatusType(StrEnum):
+
+    REQUESTED = "REQUESTED"
+    PENDING = "PENDING"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+
+
