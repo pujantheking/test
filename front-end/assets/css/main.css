@@ -4,27 +4,47 @@
     position: relative;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    padding-top: 0px;
+    height: fit-content;
 }
-.brand-logo,
-.default-logo,
-.responsive-logo {
+.brand-logo {
     max-width: 128px;
     transition: all 0.4s;
     position: relative;
     margin-right: 35px;
 }
-@media (min-width: 576px) {
-    .site-navbar {
-        padding-top: 0px;
-    }
+
+.brand-logo img {
+    max-width: 100%;
+    height: auto;
+}
+
+.default-logo {
+    display: none;
+}
+
+.responsive-logo {
+    display: block;
 }
 
 @media (min-width: 992px) {
-    .site-navbar {
-        flex-flow: row nowrap;
-        justify-content: flex-start;
+    .default-logo {
+        display: block;
+    }
+
+    .responsive-logo {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .brand-logo {
+        max-width: 150px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .brand-logo {
+        max-width: 200px;
     }
 }
 
