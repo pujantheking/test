@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Integration</title>
+    <script src="path/to/payment-gateway.js"></script> <!-- Link to the payment gateway JavaScript SDK -->
+</head>
+<body>
+    <h1>Make a Payment</h1>
+    <button id="payButton">Pay Now</button>
+
+    <script>
+        // Payment initiation function triggered by clicking "Pay Now"
+        function initiatePayment() {
+            // Payment request JSON object, replace with actual parameters as required
+            const reqJson = {
+                consumerData: {
+                    amount: 5000,              // Specify amount in smallest currency unit (e.g., cents for USD)
+                    currency: "USD",           // Currency code, e.g., "USD" or "INR"
+                    consumerId: "user123",     // Unique consumer ID
+                    consumerMobileNo: "1234567890", // Consumer mobile number
+                    consumerEmailId: "user@example.com", // Consumer email
+                    txnId: "txn123456",        // Unique transaction ID
+                    merchantId: "merchant123", // Unique merchant ID (replace with actual ID)
+                    responseHandler: handleResponse  // Callback for handling the payment response
+                }
+            };
+
+            console.log("Initiating payment with the following request:", reqJson);
+
+            try {
+                // Trigger the payment gateway's checkout method with the request JSON
+                $.pnCheckout(reqJson);
+                console.log("Payment initiated...");
+            } catch (error) {
+                console.error("Error while initiating payment:", error);
+                alert("An error occurred during payment initiation. Please try again.");
+            }
+        }
+
+        // Function to handle the payment response from the gateway
+        function handleResponse(response) {
+            console.log("Received response from payment gateway:", response);
+
+            if (response && response.responseCode === "SUCCESS") {
+                // Successful transaction
+                alert("Payment successful! Transaction ID: " + response.transactionId);
+            } else if (response && response.responseCode === "FAILED") {
+                // Failed transaction
+                alert("Payment failed. Reason: " + response.responseMsg);
+            } else {
+                // Unknown response structure
+                console.error("Unexpected response format:", response);
+                alert("Unexpected response received from payment gateway.");
+            }
+        }
+
+        // Adding click event listener to the "Pay Now" button
+        document.addEventListener("DOMContentLoaded", function() {
+            const paymentButton = document.getElementById("payButton");
+            paymentButton.addEventListener("click", initiatePayment);
+        });
+    </script>
+</body>
+</html>
+
+
+
+const userData = JSON.parse(sessionStorage.getItem('orderDetails'));
+        if (userData) {
+          userData.consumerId = res.consumerId;
+          userData.txnId = res.txnId;
+          userData.amount = res.amount;
+          userData.status = "Success";
+
+          // Delay to ensure session data is ready
+          setTimeout(() => {
+            fetch('http://localhost:3000/store-user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert("Payment and data storage successful!");
+                window.location.href = 'order-confirmation.html';
+              } else {
+                alert("Data storage failed. Please try again.");
+              }
+            })
+            .catch(error => console.error("Error storing user data:", error));
+          }, 500); // Short delay for sessionStorage reliability

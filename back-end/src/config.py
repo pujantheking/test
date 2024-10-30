@@ -30,28 +30,19 @@ class Settings(BaseSettings):
 
     # App variables
     ENV: str = os.getenv("ENV", AppEnvironment.LOCAL.value)
-    APP_NAME: str | None = os.getenv("APP_NAME")
-    APP_VERSION: str | None = os.getenv("APP_VERSION")
-    APP_HOST: str | None = os.getenv("APP_HOST")
+    APP_NAME: str = "optec"
+    APP_VERSION: str = "1.0"
+    APP_HOST: str = "localhost"
     APP_PORT: Optional[int] = os.getenv("APP_PORT")  # type: ignore
     APP_DEBUG: Optional[bool] = os.getenv("APP_DEBUG")  # type: ignore
     APP_CONTAINER: Optional[bool] = os.getenv("APP_CONTAINER")  # type: ignore
 
-    # JWT Token variables
-    JWT_SECRET_KEY: str | None = os.getenv("JWT_SECRET_KEY")
-    JWT_ALGORITHM: str | None = os.getenv("JWT_ALGORITHM")
-    ACCESS_TOKEN_EXP: Optional[int] = os.getenv("ACCESS_TOKEN_EXP")  # type: ignore
-    REFRESH_TOKEN_EXP: Optional[int] = os.getenv("REFRESH_TOKEN_EXP")  # type: ignore
-
-    DATABASE_USER: str | None = os.getenv("DATABASE_USER")
-    DATABASE_PASSWORD: str | None = os.getenv("DATABASE_PASSWORD")
-    DATABASE_HOST: str | None = os.getenv("DATABASE_HOST")
-    DATABASE_PORT: str | None = os.getenv("DATABASE_PORT")
-    DATABASE_NAME: str | None = os.getenv("DATABASE_NAME")
-    DATABASE_URL: str | None = os.getenv("DATABASE_URL")
-
-
-    LLAMA_API_KEY: str | None = os.getenv("LLAMA_API_KEY")
+    DATABASE_USER: str = "admin"
+    DATABASE_PASSWORD: str = "admin"
+    DATABASE_HOST: str = "localhost"
+    DATABASE_PORT: str = "5050"
+    DATABASE_NAME: str = "optec"
+    DATABASE_URL: str = ""
 
     @field_validator("DATABASE_URL", mode="before")
     def assemble_db_url(cls, val, values) -> str:

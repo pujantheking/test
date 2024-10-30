@@ -8,13 +8,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zeny Enterprise Theme</title>
+  <title>Zeny Enterprise</title>
 
   <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
   <!--- End favicon-->
-
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&amp;display=swap" rel="stylesheet">
   <!-- End google font  -->
 
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -29,6 +27,7 @@
 
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/app.min.css">
+  <script src="https://www.paynimo.com/paynimocheckout/client/lib/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -71,7 +70,7 @@
             <div class="optech-header-info ">
               <ul>
                 <li><a href="tel:123"><i class="ri-phone-fill"></i>+91-7517575575</a></li>
-                <li><a href="mailto:name@email.com"><i class="ri-mail-fill"></i>zenyenterprise2@gmail.com</a></li>
+                <li><a href="mailto:name@email.com"><i class="ri-mail-fill"></i>zenyenterprises2@gmail.com</a></li>
               </ul>
             </div>
           </div>
@@ -214,13 +213,13 @@
               <ul>
                 <li>Product</li>
                 <li id="product-name">Product Name</li>
-                <li>Total<span class="total-amount" id="product-price">Rs.00.00</span></li>
+                <li>Total<span class="total-amount" id="product-price">Rs.1</span></li>
               </ul>
               <div class="shop-radio-btn">
                 <input id="radio-2" name="radio" type="radio">
                 <label for="radio-2" class="radio-label">Cash on delivery</label>
               </div>
-              <span>Pay with cash upon delivery.</span>
+              <span>Book your order.</span>
               <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
             </div>
             <a class="optech-default-btn shop-order-btn" href="#" id="place-order-btn" data-text="Place Order"><span class="btn-wraper">Place Order</span></a>
@@ -231,117 +230,220 @@
   </div>
   <!-- End section -->
 
-  <script src="assets/js/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/menu/menu.js"></script>
-  <script src="assets/js/jquery.magnific-popup.min.js"></script>
-  <script src="assets/js/slick.js"></script>
-  <script src="assets/js/countdown.js"></script>
-  <script src="assets/js/skillbar.js"></script>
-  <script src="assets/js/slick-animation.js"></script>
-  <script src="assets/js/slick-animation.min.js"></script>
-  <script src="assets/js/faq.js"></script>
-  <script src="assets/js/isotope.pkgd.min.js"></script>
-  <script src="assets/js/tabs-slider.js"></script>
-  <script src="assets/js/product-increment.js"></script>
-  <script src="assets/js/top-to-bottom.js"></script>
-  <script src="assets/js/aos.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyArZVfNvjnLNwJZlLJKuOiWHZ6vtQzzb1Y"></script>
+ <!-- Include the payment gateway script -->
+<script type="text/javascript" src="https://www.paynimo.com/paynimocheckout/server/lib/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script src="assets/js/app.js"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-  const product = JSON.parse(localStorage.getItem('cartProduct'));
-  if (product) {
-    document.getElementById('product-name').innerText = product.name;
-    document.getElementById('product-price').innerText = product.price;
-  } else {
-    document.getElementById('product-name').innerText = "Product Name";
-    document.getElementById('product-price').innerText = "Rs.00.00";
-  }
-});
+<!-- Existing scripts and custom JavaScript code -->
+<script src="assets/js/jquery-3.7.1.min.js"></script>
+<!-- Your other script imports -->
+<script src="https://www.paynimo.com/paynimocheckout/server/lib/checkout.js"></script>
 
-document.getElementById('place-order-btn').addEventListener('click', function (e) {
-  e.preventDefault();
+<script>
+  let consumerId, txnId; // Global variables
+  function generateRandomId(length) {
+    let id = '';
+    for (let i = 0; i < length; i++) {
+      id += Math.floor(Math.random() * 10);
+    }
+    return id;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const product = JSON.parse(localStorage.getItem('cartProduct'));
+    if (product) {
+      document.getElementById('product-name').innerText = product.name;
+      //document.getElementById('product-price').innerText = product.price;
+    } else {
+      document.getElementById('product-name').innerText = "Product Name";
+      document.getElementById('product-price').innerText = "Rs.1";
+    }
+  });
 
-  // Clear previous error messages
-  clearErrors();
+  document.getElementById('place-order-btn').addEventListener('click', function (e) {
+    e.preventDefault();
 
-  const firstName = document.getElementById('first-name').value.trim();
-  const lastName = document.getElementById('last-name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const address = document.getElementById('address').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const zipCode = document.getElementById('zip-code').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  
-  let valid = true;
+    // Clear previous error messages
+    clearErrors();
 
-  // Validation for required fields
-  if (!firstName) {
-    showError('error-first-name', 'First name is required');
-    valid = false;
-  }
-  if (!lastName) {
-    showError('error-last-name', 'Last name is required');
-    valid = false;
-  }
-  if (!email) {
-    showError('error-email', 'Email is required');
-    valid = false;
-  }
-  if (!address) {
-    showError('error-address', 'Address is required');
-    valid = false;
-  }
-  if (!city) {
-    showError('error-city', 'City is required');
-    valid = false;
-  }
-  if (!zipCode) {
-    showError('error-zip-code', 'ZIP Code is required');
-    valid = false;
-  }
-  if (!phone) {
-    showError('error-phone', 'Phone number is required');
-    valid = false;
+    const firstName = document.getElementById('first-name').value.trim();
+    const lastName = document.getElementById('last-name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const zipCode = document.getElementById('zip-code').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    
+    let valid = true;
+
+    // Validation for required fields
+    if (!firstName) {
+      showError('error-first-name', 'First name is required');
+      valid = false;
+    }
+    if (!lastName) {
+      showError('error-last-name', 'Last name is required');
+      valid = false;
+    }
+    if (!email) {
+      showError('error-email', 'Email is required');
+      valid = false;
+    }
+    if (!address) {
+      showError('error-address', 'Address is required');
+      valid = false;
+    }
+    if (!city) {
+      showError('error-city', 'City is required');
+      valid = false;
+    }
+    if (!zipCode) {
+      showError('error-zip-code', 'ZIP Code is required');
+      valid = false;
+    }
+    if (!phone) {
+      showError('error-phone', 'Phone number is required');
+      valid = false;
+    }
+
+    if (valid) {
+      const productName = document.getElementById('product-name').innerText;
+      const productPrice = document.getElementById('product-price').innerText.replace("Rs.", "").trim();
+      const orderId = firstName + '-' + new Date().getTime();
+      
+      // Generate IDs
+      consumerId = generateRandomId(10);
+      txnId = generateRandomId(12);
+
+      const orderDetails = {
+        firstName,
+        lastName,
+        email,
+        address,
+        city,
+        zipCode,
+        phone,
+        productName,
+        amount:productPrice,
+        consumerId, // Include generated IDs
+        txnId
+      };
+      sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
+
+      fetch('http://localhost:3000/store-order-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderDetails)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("Order details stored successfully on the server.");
+          initiatePayment(); // Initiate payment after successful storage
+        } else {
+          alert("Failed to store order details. Please try again.");
+        }
+      })
+      .catch(error => console.error("Error storing order details:", error));
+    }
+  });
+
+  function showError(id, message) {
+    document.getElementById(id).innerText = message;
+    document.getElementById(id).style.color = 'red';
   }
 
-  if (valid) {
-    // Proceed with order placement
-    const productName = document.getElementById('product-name').innerText;
-    const productPrice = document.getElementById('product-price').innerText;
-    const orderId = firstName + '-' + new Date().getTime();
+  function clearErrors() {
+    const errors = document.querySelectorAll('.error-message');
+    errors.forEach(error => error.innerText = '');
+  }
 
-    const orderDetails = {
-      orderId: orderId,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      address: address,
-      city: city,
-      zipCode: zipCode,
-      phone: phone,
-      productName: productName,
-      productPrice: productPrice
+  $(document).ready(function() {
+    function handleResponse(res) {
+      console.log("Parsed Payment Details:", res);
+
+      if (res?.paymentMethod?.paymentTransaction?.statusCode === "0300") {
+        console.log("Payment Successful!!!!");
+      } else {
+        alert("Payment failed or incomplete. Please try again.");
+      }
+    }
+
+    window.initiatePayment = function() {
+      const productName = document.getElementById('product-name').innerText;
+      const productPrice = document.getElementById('product-price').innerText.replace("Rs.", "").trim();
+
+      async function generateToken(amount) {
+        try {
+          const response = await fetch('http://localhost:3000/generate-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount, consumerId, txnId })
+          });
+          const data = await response.json();
+          return data.token;
+        } catch (error) {
+          console.error("Error generating token:", error);
+          alert("Failed to generate token. Please try again.");
+        }
+      }
+
+      generateToken(productPrice).then((token) => {
+        if (!token) {
+          alert("Token generation failed. Cannot proceed with payment.");
+          return;
+        }
+
+        const reqJson = {
+          "features": {
+            "enableAbortResponse": true,
+            "enableExpressPay": true,
+            "enableInstrumentDeRegistration": true,
+            "enableMerTxnDetails": true,
+            "enableNewWindowFlow": false // Ensure this is false for in-page flow
+          },
+          "consumerData": {
+            "deviceId": "WEBSH1",
+            "token": token,
+            "returnUrl": "http://localhost:3000/payment-response", // Ensure this is set correctly
+            "responseHandler": handleResponse, // Ensure responseHandler is correct
+            "paymentMode": "all",
+            "merchantLogoUrl": "https://www.paynimo.com/CompanyDocs/company-logo-vertical.png",
+            "merchantId": "L1043733",
+            "currency": "INR",
+            "consumerId": consumerId,
+            "txnId": txnId,
+            "items": [{
+              "itemId": "first",
+              "amount": productPrice,
+              "comAmt": "0"
+            }],
+            "customStyle": {
+              "PRIMARY_COLOR_CODE": "#45beaa",
+              "SECONDARY_COLOR_CODE": "#FFFFFF",
+              "BUTTON_COLOR_CODE_1": "#2d8c8c",
+              "BUTTON_COLOR_CODE_2": "#FFFFFF"
+            }
+          }
+        };
+
+        try {
+          console.log("Initializing payment...");
+          $.pnCheckout(reqJson);
+        } catch (error) {
+          console.error("Error initiating payment:", error);
+        }
+      });
     };
+  });
 
-    sessionStorage.setItem('orderDetails', JSON.stringify(orderDetails));
-    window.location.href = 'order-confirmation.html';
-  }
-});
+  // Ensure handleResponse is at the global level
+</script>
 
-function showError(id, message) {
-  document.getElementById(id).innerText = message;
-  document.getElementById(id).style.color = 'red';
-}
 
-function clearErrors() {
-  const errors = document.querySelectorAll('.error-message');
-  errors.forEach(error => error.innerText = '');
-}
-  </script>
+
+
+
   
   <!-- Footer  -->
 
@@ -364,14 +466,14 @@ function clearErrors() {
             </a>
           </div>
           <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-duration="700">
-            <a href="mailto:zenyenterprise2@gmail.com">
+            <a href="mailto:zenyenterprises2@gmail.com">
               <div class="optech-infobox-item">
                 <div class="optech-infobox-icon">
                   <i class="ri-mail-fill"></i>
                 </div>
                 <div class="optech-infobox-data">
                   <p>Email address</p>
-                  <h5>zenyenterprise2@gmail.com</h5>
+                  <h5>zenyenterprises2@gmail.com</h5>
                 </div>
               </div>
             </a>
@@ -383,7 +485,7 @@ function clearErrors() {
               </div>
               <div class="optech-infobox-data">
                 <p>Office Hours</p>
-                <h5>8:00 AM – 10:00 PM</h5>
+                <h5>9:00 AM – 10:00 PM</h5>
               </div>
             </div>
           </div>
@@ -426,7 +528,7 @@ function clearErrors() {
         <div class="row">
           <div class="col-lg-6 d-flex align-items-center">
             <div class="optech-copyright">
-              <p>Copyright © 2024. All rights reserved.</p>
+              <p>Copyright © 2020. All rights reserved.</p>
             </div>
           </div>
         </div>
@@ -542,7 +644,6 @@ function clearErrors() {
   <script src="assets/js/product-increment.js"></script>
   <script src="assets/js/top-to-bottom.js"></script>
   <script src="assets/js/aos.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyArZVfNvjnLNwJZlLJKuOiWHZ6vtQzzb1Y"></script>
 
   <script src="assets/js/app.js"></script>
 
